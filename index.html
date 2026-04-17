@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latent AI | Premium AI Assistant</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="light">
+
+<div class="dashboard-wrapper">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-circle">🇮🇳</div>
+      <span class="logo-text">LATENT AI</span>
+    </div>
+
+    <nav class="nav-menu">
+      <button id="chatTabBtn" class="nav-item active">
+        <i class="fas fa-comment-dots"></i> New Chat
+      </button>
+      <button id="savedTabBtn" class="nav-item">
+        <i class="fas fa-history"></i> Saved History
+      </button>
+      <button id="settingsTabBtn" class="nav-item">
+        <i class="fas fa-cog"></i> Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="loginBtn" class="login-btn"><i class="fas fa-lock"></i> Login</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <div id="locationDisplay" class="status-badge">📍 Detecting location...</div>
+      <div class="top-actions">
+        <div class="theme-switch">
+          <input type="checkbox" id="darkModeToggle" class="toggle">
+        </div>
+      </div>
+    </header>
+
+    <section id="chatPanel" class="content-panel active">
+      <div class="welcome-hero">
+        <h1>Namaste, I'm Latent.</h1>
+        <p>How can I help you with your engineering or daily tasks today?</p>
+      </div>
+      <div id="chatContainer" class="chat-container"></div>
+    </section>
+
+    <section id="savedPanel" class="content-panel hidden">
+      <div class="panel-header"><h2>Saved Conversations</h2></div>
+      <div id="savedChatsList" class="chat-container"></div>
+    </section>
+
+    <section id="settingsPanel" class="content-panel hidden">
+      <div class="panel-header"><h2>Settings</h2></div>
+    </section>
+
+    <div class="input-section">
+      <div class="input-container">
+        <button id="fileBtn" class="action-icon" title="Upload File"><i class="fas fa-paperclip"></i></button>
+        <input type="text" id="inputBox" placeholder="Ask Latent anything..." autocomplete="off">
+        <button id="voiceBtn" class="action-icon" title="Voice Input"><i class="fas fa-microphone"></i></button>
+        <button id="sendBtn" class="send-action">Send <i class="fas fa-paper-plane"></i></button>
+      </div>
+      <p class="footer-note">Latent AI v2.0 • India's Own AI Assistant</p>
+    </div>
+  </main>
+</div>
+
+<div id="toast" class="toast"></div>
+<input type="file" id="fileInput" class="hidden">
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

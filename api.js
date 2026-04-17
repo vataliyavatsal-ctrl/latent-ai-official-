@@ -1,15 +1,12 @@
-// api.js - Final Sorted & Clean
+// 1. Sabse pehle apna live link yahan ek baar define kar do
+const API_BASE = "https://latent-ai-backend.onrender.com"; 
 
-const response = await fetch('https://latent-ai-backend.onrender.com/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: userInput })
-});
 /**
  * AI Chat Logic
  */
 export async function fetchAIReply(message) {
     try {
+        // Ab yahan ${API_BASE} sahi se kaam karega
         const response = await fetch(`${API_BASE}/chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -29,7 +26,7 @@ export async function fetchAIReply(message) {
 }
 
 /**
- * Location Services - Iske bina app.js error de rahi thi!
+ * Location Services
  */
 export async function ipLocation() {
     try {

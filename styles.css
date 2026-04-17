@@ -1,53 +1,158 @@
-import { fetchAIReply } from "./api.js";
-import { addMessageToDOM, showSkeleton, removeSkeleton } from "./ui.js";
-
-const chatContainer = document.getElementById("chatContainer");
-const inputBox      = document.getElementById("inputBox");
-const sendBtn       = document.getElementById("sendBtn");
-
-// Tab Logic
-const tabs = {
-    chat: { btn: document.getElementById("chatTabBtn"), panel: document.getElementById("chatPanel") },
-    saved: { btn: document.getElementById("savedTabBtn"), panel: document.getElementById("savedPanel") },
-    settings: { btn: document.getElementById("settingsTabBtn"), panel: document.getElementById("settingsPanel") }
-};
-
-function switchTab(activeTab) {
-    Object.values(tabs).forEach(tab => {
-        tab.panel.classList.add("hidden");
-        tab.btn.classList.remove("active");
-    });
-    tabs[activeTab].panel.classList.remove("hidden");
-    tabs[activeTab].btn.classList.add("active");
+/* ── Design Tokens & Premium Colors ── */
+:root {
+  --primary: #ff9933;
+  --primary-hover: #fb8c00;
+  --secondary: #138808;
+  --bg-main: #ffffff;
+  --bg-side: #f8fafc;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --card-bg: #ffffff;
+  --input-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
-tabs.chat.btn.onclick = () => switchTab("chat");
-tabs.saved.btn.onclick = () => switchTab("saved");
-tabs.settings.btn.onclick = () => switchTab("settings");
-
-// Chat Logic
-async function handleSend() {
-    const text = inputBox.value.trim();
-    if (!text) return;
-
-    addMessageToDOM(chatContainer, { text, isUser: true });
-    inputBox.value = "";
-    showSkeleton(chatContainer);
-
-    try {
-        const reply = await fetchAIReply(text);
-        removeSkeleton();
-        addMessageToDOM(chatContainer, { text: reply, isUser: false });
-    } catch (err) {
-        removeSkeleton();
-        addMessageToDOM(chatContainer, { text: "Server issue, bhai! Check Render.", isUser: false });
-    }
+body.dark {
+  --bg-main: #0f172a;
+  --bg-side: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --card-bg: #1e293b;
 }
 
-sendBtn.onclick = handleSend;
-inputBox.onkeydown = (e) => { if(e.key === "Enter") handleSend(); };
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
-// Dark Mode
-document.getElementById("darkModeToggle").onchange = (e) => {
-    document.body.classList.toggle("dark-mode", e.target.checked);
-};
+body { background: var(--bg-main); color: var(--text-main); overflow: hidden; transition: background 0.3s; }
+
+.dashboard-wrapper { display: flex; height: 100vh; width: 100vw; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 260px;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.sidebar-header { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
+.logo-circle { font-size: 24px; background: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.logo-text { font-weight: 700; font-size: 20px; letter-spacing: -0.5px; color: var(--primary); }
+
+.nav-item {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.nav-item:hover, .nav-item.active {
+  background: var(--border);
+  color: var(--text-main);
+}
+
+.sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
+
+/* ── Main Content ── */
+.main-content { flex: 1; display: flex; flex-direction: column; position: relative; height: 100%; }
+
+.top-bar { padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; }
+.status-badge { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+.content-panel { flex: 1; overflow-y: auto; padding-bottom: 120px; display: none; scroll-behavior: smooth; }
+.content-panel.active { display: block; }
+
+.welcome-hero { text-align: center; margin-top: 15vh; margin-bottom: 40px; }
+.welcome-hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; letter-spacing: -1px; }
+.welcome-hero p { color: var(--text-muted); font-size: 18px; }
+
+/* ── Chat & Response Cards ── */
+.chat-container { width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; }
+
+.message { margin-bottom: 32px; animation: fadeIn 0.4s ease; }
+
+.message.ai .bubble {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  line-height: 1.7;
+  font-size: 15px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.message.user .bubble {
+  background: var(--primary);
+  color: white;
+  border-radius: 16px;
+  border-bottom-right-radius: 4px;
+  padding: 12px 20px;
+  max-width: 80%;
+  margin-left: auto;
+  font-size: 15px;
+}
+
+/* ── Input Section ── */
+.input-section {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 20px 40px 40px;
+  background: linear-gradient(to top, var(--bg-main) 70%, transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-container {
+  width: 100%;
+  max-width: 800px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--input-shadow);
+}
+
+.input-container input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 14px 0;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 16px;
+}
+
+.action-icon { background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 8px; border-radius: 50%; transition: background 0.2s; }
+.action-icon:hover { background: var(--bg-side); }
+
+.send-action {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.send-action:hover { background: var(--primary-hover); }
+
+.footer-note { font-size: 11px; color: var(--text-muted); margin-top: 12px; font-weight: 500; }
+
+/* ── Utils ── */
+.hidden { display: none !important; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

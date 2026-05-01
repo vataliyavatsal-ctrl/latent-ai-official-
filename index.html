@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Latent AI 🇮🇳 - Fully Fixed</title>
+        <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src * 'unsafe-inline' https: http: wss: ws: https://openrouter.ai https://api.deepseek.com; script-src * 'unsafe-inline' 'unsafe-eval' blob:; style-src * 'unsafe-inline'; img-src * data: blob:; font-src * data:; worker-src * blob:;">
+    <style>
+    
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui;
+            background: linear-gradient(135deg, #0a0f1e 0%, #050a15 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .app {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(15, 25, 45, 0.98), rgba(8, 15, 30, 0.98));
+            border: none;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Mobile Phones */
+        @media (max-width: 767px) {
+            .app {
+                height: 100dvh;
+            }
+            .bubble {
+                max-width: 88%;
+                font-size: 13px;
+            }
+            .mode-btn {
+                padding: 5px 12px;
+                font-size: 11px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .chakra-circle {
+                width: 55px;
+                height: 55px;
+            }
+            .chakra-circle .flag-emoji {
+                font-size: 26px;
+            }
+            .tab-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            .send-btn {
+                padding: 6px 16px;
+                font-size: 12px;
+            }
+        }
+        
+        /* Desktop/Laptop */
+        @media (min-width: 768px) {
+            body {
+                background: linear-gradient(135deg, #0a0f1e 0%, #050a15 100%);
+            }
+            .app {
+                width: 100%;
+                height: 100vh;
+            }
+            .bubble {
+                max-width: 70%;
+                font-size: 15px;
+            }
+            .header h1 {
+                font-size: 28px;
+            }
+            .mode-btn {
+                padding: 8px 20px;
+                font-size: 13px;
+            }
+            .send-btn {
+                padding: 10px 26px;
+                font-size: 13px;
+            }
+        }
+        
+        /* Large Desktop */
+        @media (min-width: 1200px) {
+            .bubble {
+                max-width: 60%;
+                font-size: 16px;
+            }
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+        
+        .tricolor-stripes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            display: flex;
+            z-index: 10;
+        }
+        .saffron-stripe { flex: 1; background: #ff9933; animation: pulseStripe 2s ease-in-out infinite; }
+        .white-stripe { flex: 1; background: #ffffff; }
+        .green-stripe { flex: 1; background: #138808; animation: pulseStripe 2s ease-in-out infinite 1s; }
+        @keyframes pulseStripe { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+        
+        .header { padding: 20px 20px 12px; text-align: center; background: rgba(15, 25, 45, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(139, 92, 246, 0.2); }
+        .chakra-container { width: 70px; height: 70px; margin: 0 auto 8px; cursor: pointer; transition: transform 0.3s; }
+        .chakra-container:hover { transform: scale(1.05); }
+        .chakra-circle { width: 70px; height: 70px; background: linear-gradient(135deg, #ff9933, #ffffff, #138808); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #ff9933; animation: rotateChakra 20s linear infinite; }
+        @keyframes rotateChakra { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .header h1 { font-size: 26px; font-weight: 700; margin-top: 5px; background: linear-gradient(135deg, #ffb347, #a78bfa, #4ade80); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .dual-language { font-size: 11px; margin-top: 6px; display: flex; justify-content: center; gap: 12px; }
+        .lang-badge { background: rgba(139, 92, 246, 0.2); padding: 3px 10px; border-radius: 30px; color: #a78bfa; }
+        .location-badge { font-size: 11px; margin-top: 10px; background: rgba(139, 92, 246, 0.15); display: inline-block; padding: 8px 16px; border-radius: 40px; color: #a78bfa; cursor: pointer; transition: all 0.2s; }
+        .location-badge:hover { background: rgba(139, 92, 246, 0.3); transform: scale(1.02); }
+        
+        .mode-bar { display: flex; justify-content: center; gap: 12px; padding: 10px 16px; background: rgba(15, 25, 45, 0.8); border-bottom: 1px solid rgba(139, 92, 246, 0.15); backdrop-filter: blur(10px); }
+        .mode-btn { padding: 6px 16px; border-radius: 40px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: transparent; border: 1px solid rgba(139, 92, 246, 0.3); color: #a78bfa; }
+        .mode-btn:hover { transform: scale(1.02); background: rgba(139, 92, 246, 0.2); }
+        .mode-btn.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; border-color: transparent; }
+        
+        .search-bar { padding: 8px 16px; background: rgba(15, 25, 45, 0.8); border-bottom: 1px solid rgba(139, 92, 246, 0.15); display: flex; gap: 8px; backdrop-filter: blur(10px); }
+        .search-input { flex: 1; padding: 10px 16px; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 40px; font-size: 13px; outline: none; background: rgba(30, 35, 55, 0.9); color: #e2e8f0; }
+        .search-input:focus { border-color: #a78bfa; box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2); }
+        .search-btn { background: linear-gradient(135deg, #8b5cf6, #6366f1); border: none; padding: 8px 18px; border-radius: 40px; color: white; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+        .search-btn:hover { transform: scale(1.02); opacity: 0.9; }
+        .clear-search { background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); padding: 8px 14px; border-radius: 40px; cursor: pointer; font-size: 12px; color: #a78bfa; transition: all 0.2s; }
+        .clear-search:hover { background: rgba(139, 92, 246, 0.3); }
+        
+        .tab-bar { display: flex; justify-content: space-around; padding: 10px 16px; background: rgba(15, 25, 45, 0.8); border-bottom: 1px solid rgba(139, 92, 246, 0.15); backdrop-filter: blur(10px); }
+        .tab-btn { background: transparent; border: none; padding: 8px 20px; border-radius: 40px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: #94a3b8; }
+        .tab-btn:hover { background: rgba(139, 92, 246, 0.2); transform: scale(1.02); }
+        .tab-btn.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; }
+        
+        .chat-area { flex: 1; overflow-y: auto; padding: 20px; }
+        .chat-area::-webkit-scrollbar { width: 5px; }
+        .chat-area::-webkit-scrollbar-track { background: rgba(139, 92, 246, 0.1); border-radius: 10px; }
+        .chat-area::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 10px; }
+        
+        .message { display: flex; margin-bottom: 20px; animation: fadeIn 0.3s; position: relative; }
+        .user { justify-content: flex-end; }
+        .ai { justify-content: flex-start; }
+        .bubble { 
+            max-width: 90%; 
+            width: auto;
+            padding: 12px 18px; 
+            border-radius: 24px; 
+            font-size: 14px; 
+            line-height: 1.6; 
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .user .bubble { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; border-bottom-right-radius: 6px; }
+        .ai .bubble { background: rgba(30, 41, 59, 0.9); color: #e2e8f0; border-bottom-left-radius: 6px; backdrop-filter: blur(5px); }
+        
+        .avatar { width: 34px; height: 34px; background: linear-gradient(135deg, #8b5cf6, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 18px; color: white; animation: rotateChakra 10s linear infinite; }
+        
+        .typing { display: flex; gap: 8px; padding: 12px 20px; background: rgba(30, 41, 59, 0.9); border-radius: 30px; width: fit-content; }
+        .dot { width: 8px; height: 8px; background: #a78bfa; border-radius: 50%; animation: pulse 1.4s infinite; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse { 0%,60%,100% { transform: scale(0.6); opacity: 0.4; } 30% { transform: scale(1.2); opacity: 1; } }
+        
+        .input-area { padding: 12px 16px 20px; background: rgba(15, 25, 45, 0.8); backdrop-filter: blur(10px); border-top: 1px solid rgba(139, 92, 246, 0.15); }
+        .input-wrapper { display: flex; gap: 10px; background: rgba(30, 35, 55, 0.9); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 48px; padding: 8px 16px; transition: all 0.2s; }
+        .input-wrapper:focus-within { border-color: #a78bfa; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); transform: scale(1.01); }
+        input { flex: 1; background: transparent; border: none; font-size: 14px; outline: none; padding: 10px 0; color: #e2e8f0; }
+        input::placeholder { color: rgba(226, 232, 240, 0.5); }
+        .action-buttons { display: flex; gap: 8px; }
+        .icon-btn { background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); padding: 8px 12px; border-radius: 40px; cursor: pointer; font-size: 16px; transition: all 0.2s; color: #a78bfa; }
+        .icon-btn:hover { background: rgba(139, 92, 246, 0.3); transform: scale(1.05); }
+        .send-btn { background: linear-gradient(135deg, #8b5cf6, #6366f1); border: none; padding: 8px 22px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .send-btn:hover { transform: scale(1.02); opacity: 0.9; }
+        
+        .login-footer { padding: 10px 16px 14px; border-top: 1px solid rgba(139, 92, 246, 0.15); display: flex; justify-content: center; gap: 12px; background: rgba(15, 25, 45, 0.8); }
+        .google-login-btn { background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); padding: 8px 22px; border-radius: 40px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; color: #a78bfa; }
+        .google-login-btn:hover { background: rgba(139, 92, 246, 0.3); transform: scale(1.02); }
+        .tagline { text-align: center; font-size: 10px; padding: 8px; border-top: 1px solid rgba(139, 92, 246, 0.15); background: rgba(15, 25, 45, 0.8); color: #94a3b8; }
+        
+        .message-time { font-size: 10px; opacity: 0.6; margin-top: 4px; text-align: right; }
+        .message-actions { display: none; position: absolute; right: 0; top: -30px; gap: 6px; background: rgba(0,0,0,0.75); padding: 4px 10px; border-radius: 20px; z-index: 10; }
+        .message:hover .message-actions { display: flex; }
+        .message-actions button { background: none; border: none; color: white; cursor: pointer; padding: 4px 8px; font-size: 14px; }
+        .message.touch-active .message-actions { display: flex !important; }
+        .copy-btn { display: none; position: absolute; top: 6px; right: 8px; background: rgba(255,255,255,0.15); border: none; color: #e2e8f0; border-radius: 50%; width: 26px; height: 26px; font-size: 11px; cursor: pointer; transition: all 0.2s; align-items: center; justify-content: center; padding: 0; }
+        .copy-btn:hover { background: rgba(255,255,255,0.35); }
+        .message:hover .copy-btn { display: flex !important; }
+        .message.touch-active .copy-btn { display: flex !important; }
+        .ai .bubble { position: relative; padding-top: 28px; }
+        .hidden-panel { display: none; }
+        .no-results { text-align: center; padding: 40px; color: #94a3b8; }
+        
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 48px; z-index: 1000; transition: transform 0.3s; text-align: center; font-size: 13px; backdrop-filter: blur(10px); }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        
+        .mute-fab { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #6366f1); border: none; font-size: 24px; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); transition: all 0.2s; z-index: 100; color: white; }
+        .mute-fab:hover { transform: scale(1.1); }
+        
+        .settings-section { background: rgba(30, 41, 59, 0.5); border-radius: 16px; padding: 16px; margin-bottom: 16px; backdrop-filter: blur(5px); }
+        .settings-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(139, 92, 246, 0.2); color: #e2e8f0; }
+        .settings-item:last-child { border-bottom: none; }
+        
+        .google-maps-link { color: #a78bfa; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 8px; padding: 8px 12px; background: rgba(139, 92, 246, 0.15); border-radius: 20px; transition: all 0.2s; }
+        .google-maps-link:hover { background: rgba(139, 92, 246, 0.3); text-decoration: underline; }
+        
+        body.light { background: linear-gradient(135deg, #fff5e6, #ffe8d6); }
+        body.light .app { background: rgba(255, 255, 255, 0.96); border-color: rgba(0,0,0,0.05); }
+        body.light .white-stripe { background: #1e293b; }
+        body.light .header { background: rgba(255,255,255,0.5); border-bottom-color: #e2e8f0; }
+        body.light .header h1 { background: linear-gradient(135deg, #ff9933, #138808); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body.light .lang-badge { background: #fff5e6; color: #64748b; }
+        body.light .location-badge { background: #f0f2f5; color: #64748b; }
+        body.light .mode-bar { background: rgba(255,255,255,0.9); border-bottom-color: #e2e8f0; }
+        body.light .mode-btn { border-color: #e2e8f0; color: #64748b; }
+        body.light .mode-btn.active { background: linear-gradient(135deg, #ff9933, #ffb347); color: white; }
+        body.light .search-bar { background: rgba(255,255,255,0.9); border-bottom-color: #e2e8f0; }
+        body.light .search-input { background: white; border-color: #e2e8f0; color: #333; }
+        body.light .search-btn { background: linear-gradient(135deg, #ff9933, #ffb347); }
+        body.light .clear-search { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
+        body.light .tab-bar { background: rgba(255,255,255,0.9); border-bottom-color: #e2e8f0; }
+        body.light .tab-btn.active { background: linear-gradient(135deg, #ff9933, #ffb347); color: white; }
+        body.light .user .bubble { background: linear-gradient(135deg, #ff9933, #ffb347); }
+        body.light .ai .bubble { background: #f0f2f5; color: #333; }
+        body.light .bubble pre { background: #f1f5f9; color: #1e293b; }
+        .bubble pre { background: rgba(0,0,0,0.4); border-radius: 10px; padding: 12px; overflow-x: auto; margin: 8px 0; border: 1px solid rgba(139,92,246,0.3); }
+        .bubble code { font-family: 'Courier New', monospace; font-size: 13px; color: #a78bfa; }
+        .bubble pre code { color: #e2e8f0; }
+        body.light .avatar { background: linear-gradient(135deg, #ff9933, #138808); }
+        body.light .input-area { background: rgba(255,255,255,0.9); border-top-color: #e2e8f0; }
+        body.light .input-wrapper { background: #f8fafc; border-color: #e2e8f0; }
+        body.light input { color: #333; }
+        body.light .send-btn { background: linear-gradient(135deg, #ff9933, #ffb347); }
+        body.light .login-footer { background: #fefefe; border-top-color: #e8ecf0; }
+        body.light .google-login-btn { background: white; border-color: #e2e8f0; color: #333; }
+        body.light .tagline { background: white; border-top-color: #edf2f7; }
+        body.light .settings-section { background: #f8fafc; }
+        body.light .settings-item { border-bottom-color: #e2e8f0; color: #333; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="tricolor-stripes">
+            <div class="saffron-stripe"></div>
+            <div class="white-stripe"></div>
+            <div class="green-stripe"></div>
+        </div>
+        
+        <div class="header">
+            <div class="chakra-container"><div class="chakra-circle"><span class="flag-emoji">🇮🇳</span></div></div>
+            <h1>LATENT AI</h1>
+            <div class="dual-language">
+                <span class="lang-badge">🇮🇳 हिंदी</span>
+                <span class="lang-badge">🇬🇧 English</span>
+                <span class="lang-badge">🗣️ 12+ भारतीय भाषाएँ</span>
+            </div>
+            <div id="locationDisplay" class="location-badge" onclick="openGoogleMaps()">📍 Detect location</div>
+        </div>
+        
+        <div class="mode-bar">
+            <button id="normalModeBtn" class="mode-btn active">🤖 Normal</button>
+            <button id="criticalModeBtn" class="mode-btn">🧠 Critical Thinking</button>
+            <button id="searchModeBtn" class="mode-btn">🌐 Web Search</button>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search messages...">
+            <button id="searchBtn" class="search-btn">Search</button>
+            <button id="clearSearchBtn" class="clear-search">Clear</button>
+        </div>
+        
+        <div class="tab-bar">
+            <button id="chatTabBtn" class="tab-btn active">💬 Chat</button>
+            <button id="savedTabBtn" class="tab-btn">📜 Saved</button>
+            <button id="settingsTabBtn" class="tab-btn">⚙️ Settings</button>
+        </div>
+        
+        <div id="chatPanel" class="chat-area"></div>
+        <div id="savedPanel" class="chat-area hidden-panel">
+            <div id="savedChatsList" style="padding: 10px; text-align: center;"></div>
+        </div>
+        <div id="settingsPanel" class="chat-area hidden-panel">
+            <div style="padding: 20px;">
+                <h3 style="margin-bottom: 20px; color: #a78bfa;">⚙️ Settings</h3>
+                <div class="settings-section">
+                    <div class="settings-item"><span>🔇 Mute Voice Output</span><input type="checkbox" id="muteCheckbox"></div>
+                    <div class="settings-item"><span>🔊 Typing Sound Effect</span><input type="checkbox" id="typingSoundCheckbox" checked></div>
+                    <div class="settings-item"><span>☀️ Light Mode</span><input type="checkbox" id="darkModeCheckbox"></div>
+                </div>
+                <div class="settings-section">
+                    <h4 style="color: #a78bfa; margin-bottom: 12px;">📁 Chat Management</h4>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="exportChatsBtn" class="search-btn">📤 Export</button>
+                        <button id="importChatsBtn" class="clear-search">📥 Import</button>
+                        <button id="clearAllChatsBtn" class="clear-search">🗑️ Clear All</button>
+                    </div>
+                    <input type="file" id="importFileInput" style="display:none" accept=".json">
+                </div>
+                <div class="settings-section">
+                    <h4 style="color: #a78bfa;">ℹ️ About</h4>
+                    <p style="color: #94a3b8;">Latent AI v4.0 - Fully Fixed<br>Weather | Maps | Critical Thinking | Web Search<br>Created with ❤️ in India</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <div class="input-wrapper">
+                <input type="text" id="inputBox" placeholder="नमस्ते! क्या पूछना चाहोगे?">
+                <div class="action-buttons">
+                    <button id="voiceBtn" class="icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+                    <button id="speakBtn" class="icon-btn">🔊</button>
+                    <button id="sendBtn" class="send-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="login-footer">
+            <div id="googleLoginBtn" class="google-login-btn"><span>🔐</span> Login</div>
+            <div id="userLoggedIn" class="google-login-btn" style="display:none"><span>👤</span> <span id="userNameDisplay">User</span><span id="logoutBtn" style="margin-left:8px;">Logout</span></div>
+        </div>
+        <div class="tagline">🇮🇳 भारत में बना, दुनिया के लिए | Fully Fixed Edition 🇮🇳</div>
+    </div>
+    
+    <button id="muteFab" class="mute-fab">🔊</button>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const WEATHER_API_KEY = "90f54da86b61b66e75c215f24b68d54d";
+       const DEEPSEEK_API_KEY = "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";
+        
+        let isMuted = false, typingSoundEnabled = true, audioCtx = null;
+        let currentUser = null, messages = [], isLoading = false, hasSeenShortIntro = false;
+        let userLocation = { city: "Delhi", country: "India", lat: 28.61, lon: 77.23 };
+        let searchQuery = "";
+        let nextMessageId = 1;
+        let currentMode = "normal";
+        
+        // Village to nearest city mapping
+        const villageCityMap = {
+            'dholpur': 'Agra', 'sawai madhopur': 'Jaipur', 'nandgaon': 'Nashik',
+            'ratlam': 'Indore', 'fatehpur': 'Kanpur', 'bardhaman': 'Kolkata'
+        };
+        
+        function getNearestCity(location) {
+            const lowerLoc = location.toLowerCase().trim();
+            if (villageCityMap[lowerLoc]) return villageCityMap[lowerLoc];
+            return location;
+        }
+        
+        const chatPanel = document.getElementById('chatPanel');
+        const savedPanel = document.getElementById('savedPanel');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const chatTabBtn = document.getElementById('chatTabBtn');
+        const savedTabBtn = document.getElementById('savedTabBtn');
+        const settingsTabBtn = document.getElementById('settingsTabBtn');
+        const inputBox = document.getElementById('inputBox');
+        const sendBtn = document.getElementById('sendBtn');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const speakBtn = document.getElementById('speakBtn');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const userLoggedIn = document.getElementById('userLoggedIn');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const muteCheckbox = document.getElementById('muteCheckbox');
+        const typingSoundCheckbox = document.getElementById('typingSoundCheckbox');
+        const darkModeCheckbox = document.getElementById('darkModeCheckbox');
+        const exportChatsBtn = document.getElementById('exportChatsBtn');
+        const importChatsBtn = document.getElementById('importChatsBtn');
+        const clearAllChatsBtn = document.getElementById('clearAllChatsBtn');
+        const importFileInput = document.getElementById('importFileInput');
+        const muteFab = document.getElementById('muteFab');
+        const toast = document.getElementById('toast');
+        const savedChatsList = document.getElementById('savedChatsList');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const normalModeBtn = document.getElementById('normalModeBtn');
+        const criticalModeBtn = document.getElementById('criticalModeBtn');
+        const searchModeBtn = document.getElementById('searchModeBtn');
+
+        
+        function showToast(msg, duration = 2000) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), duration);
+        }
+        
+        function playSendSound() {
+            if (!typingSoundEnabled || isMuted) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = 880;
+                gain.gain.value = 0.1;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+                osc.stop(audioCtx.currentTime + 0.3);
+            } catch(e) {}
+        }
+        
+        function playTypingSound() {
+            if (!typingSoundEnabled || isMuted) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = 440;
+                gain.gain.value = 0.05;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.15);
+                osc.stop(audioCtx.currentTime + 0.15);
+            } catch(e) {}
+        }
+        
+        function speakText(text) {
+            if (isMuted) return;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'hi-IN';
+                utterance.rate = 0.85;
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function escapeHtml(s) {
+            return s.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m] || m)).replace(/\n/g, '<br>');
+        }
+        
+        function formatMarkdown(text) {
+            const copySVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+            return text.replace(/```([\s\S]*?)```/g, (match, code) => {
+                    const escaped = code.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                    return `<div style="position:relative"><pre><code>${code}</code></pre><button onclick="window.copyToClipboard('${escaped}')" style="position:absolute;top:6px;right:8px;background:rgba(255,255,255,0.15);border:none;color:#e2e8f0;border-radius:4px;padding:4px 8px;cursor:pointer;display:flex;align-items:center;">${copySVG}</button></div>`;
+                })
+                .replace(/^#### (.*?)$/gm, '<strong style="font-size:13px;color:#a78bfa;">$1</strong>')
+                .replace(/^### (.*?)$/gm, '<strong style="font-size:15px;color:#c4b5fd;">$1</strong>')
+                .replace(/^## (.*?)$/gm, '<strong style="font-size:17px;color:#ddd6fe;">$1</strong>')
+                .replace(/^# (.*?)$/gm, '<strong style="font-size:19px;color:#ede9fe;">$1</strong>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/\n/g, '<br>');
+        }
+        
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => showToast("✅ Copied!")).catch(() => fallbackCopy(text));
+            } else {
+                fallbackCopy(text);
+            }
+        }
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast("✅ Copied!");
+        }
+        
+        window.openGoogleMaps = function() {
+            if (userLocation.lat && userLocation.lon) {
+                window.open(`https://www.google.com/maps?q=${userLocation.lat},${userLocation.lon}`, '_blank');
+            } else {
+                showToast("📍 Detecting location first...");
+                updateLocation();
+            }
+        };
+        
+        function addMessageUI(text, isUser, msgId = null, timestamp = null) {
+            const id = msgId || nextMessageId;
+            const div = document.createElement('div');
+            div.className = `message ${isUser ? 'user' : 'ai'}`;
+            const timeStr = timestamp 
+                ? new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            let formattedText;
+            if (!isUser && (text.includes('google.com/maps') || text.includes('class="google-maps-link"'))) {
+                formattedText = text;
+            } else {
+                formattedText = formatMarkdown(escapeHtml(text));
+            }
+            
+            if (isUser) {
+                div.innerHTML = `<div class="bubble">${formattedText}</div>
+                    <div class="message-time">${timeStr}</div>
+                    <div class="message-actions">
+                        <button class="edit-btn" data-id="${id}">✏️</button>
+                        <button onclick="window.deleteMessage(${id})">🗑️</button>
+                    </div>`;
+                div.querySelector('.edit-btn').dataset.text = text;
+                div.querySelector('.edit-btn').onclick = function() { window.editMessage(parseInt(this.dataset.id), this.dataset.text); };
+            } else {
+                div.innerHTML = `<div class="avatar">🇮🇳</div>
+                    <div class="bubble">${formattedText}<button class="copy-btn" data-copy-text="" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>
+                    <div class="message-time">${timeStr}</div>`;
+                div.querySelector('.copy-btn').dataset.copyText = text;
+                div.querySelector('.copy-btn').onclick = function() { window.copyToClipboard(this.dataset.copyText); };
+            }
+            chatPanel.appendChild(div);
+            div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+            // Long press for mobile edit/delete
+            let pressTimer;
+            div.addEventListener('touchstart', () => {
+                pressTimer = setTimeout(() => { div.classList.add('touch-active'); }, 500);
+            });
+            div.addEventListener('touchend', () => clearTimeout(pressTimer));
+            div.addEventListener('touchmove', () => clearTimeout(pressTimer));
+            document.addEventListener('touchstart', (e) => {
+                if (!div.contains(e.target)) div.classList.remove('touch-active');
+            });
+        }
+        
+        function renderMessages() {
+            chatPanel.innerHTML = '';
+            messages.forEach(m => addMessageUI(m.text, m.isUser, m.id, m.time));
+            if (searchQuery) performSearch();
+        }
+        
+        function saveMsg(text, isUser) {
+            messages.push({ id: nextMessageId++, text, isUser, time: Date.now() });
+            autoSave();
+        }
+        
+        function autoSave() {
+            if (currentUser) {
+                if (messages.length > 200) messages = messages.slice(-200);
+                localStorage.setItem(`latent_chat_${currentUser.displayName}`, JSON.stringify(messages));
+            }
+        }
+        
+        window.editMessage = function(id, oldText) {
+            const newText = prompt("Edit:", oldText);
+            if (newText && newText.trim()) {
+                const idx = messages.findIndex(m => m.id === id);
+                if (idx !== -1) messages[idx].text = newText;
+                autoSave();
+                renderMessages();
+                showToast("✅ Edited!");
+            }
+        };
+        
+        window.deleteMessage = function(id) {
+            if (confirm("Delete?")) {
+                messages = messages.filter(m => m.id !== id);
+                autoSave();
+                renderMessages();
+                showToast("🗑️ Deleted!");
+            }
+        };
+        
+        function exportChats() {
+            if (!currentUser) { showToast("🔐 Login first!"); return; }
+            const data = { user: currentUser.displayName, exportDate: new Date().toISOString(), messages };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `latent_chats_${currentUser.displayName}_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+            showToast("📤 Exported!");
+        }
+        
+        function importChats(file) {
+            if (!currentUser) { showToast("🔐 Pehle login karo!"); return; }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.messages) {
+                        // Fresh IDs assign karo — purane IDs se clash na ho
+                        let freshId = 1;
+                        messages = data.messages.map(m => ({ ...m, id: freshId++ }));
+                        nextMessageId = freshId;
+                        autoSave();
+                        renderMessages();
+                        showToast(`📥 Imported ${messages.length} msgs`);
+                    }
+                } catch { showToast("❌ Invalid file"); }
+            };
+            reader.readAsText(file);
+        }
+        
+        function clearAllChats() {
+            if (confirm("Delete ALL chats?")) {
+                messages = [];
+                nextMessageId = 1;
+                autoSave();
+                renderMessages();
+                showShortIntro();
+                showToast("🗑️ All cleared");
+            }
+        }
+        
+        if ('webkitSpeechRecognition' in window) {
+            const rec = new webkitSpeechRecognition();
+            rec.lang = 'hi-IN';
+            rec.interimResults = false;
+            rec.maxAlternatives = 1;
+            const micSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>`;
+            const recSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="red" stroke="red"><circle cx="12" cy="12" r="8"/></svg>`;
+            let isListening = false;
+            voiceBtn.onclick = () => {
+                if (isListening) { rec.stop(); return; }
+                rec.start();
+                isListening = true;
+                showToast("🎤 Listening...");
+                voiceBtn.innerHTML = recSVG;
+            };
+            rec.onend = () => { isListening = false; voiceBtn.innerHTML = micSVG; };
+            rec.onresult = (e) => { inputBox.value = e.results[0][0].transcript; sendMessage(); };
+            rec.onerror = () => { isListening = false; voiceBtn.innerHTML = micSVG; showToast("🎤 Try again"); };
+        } else voiceBtn.style.display = 'none';
+        
+        function showPanel(panel) {
+            chatPanel.classList.add('hidden-panel');
+            savedPanel.classList.add('hidden-panel');
+            settingsPanel.classList.add('hidden-panel');
+            if (panel === 'chat') chatPanel.classList.remove('hidden-panel');
+            else if (panel === 'saved') savedPanel.classList.remove('hidden-panel');
+            else if (panel === 'settings') settingsPanel.classList.remove('hidden-panel');
+            [chatTabBtn, savedTabBtn, settingsTabBtn].forEach(btn => btn.classList.remove('active'));
+            if (panel === 'chat') chatTabBtn.classList.add('active');
+            else if (panel === 'saved') savedTabBtn.classList.add('active');
+            else if (panel === 'settings') settingsTabBtn.classList.add('active');
+        }
+        
+        chatTabBtn.onclick = () => showPanel('chat');
+        savedTabBtn.onclick = () => { showPanel('saved'); refreshSavedChats(); };
+        settingsTabBtn.onclick = () => showPanel('settings');
+        
+        function setMode(mode) {
+            currentMode = mode;
+            normalModeBtn.classList.remove('active');
+            criticalModeBtn.classList.remove('active');
+            if (mode === 'normal') normalModeBtn.classList.add('active');
+            else if (mode === 'critical') criticalModeBtn.classList.add('active');
+            showToast(`${mode === 'normal' ? '🤖 Normal Mode' : '🧠 Critical Thinking Mode'} ACTIVE`);
+        }
+        
+        normalModeBtn.onclick = () => setMode('normal');
+        criticalModeBtn.onclick = () => setMode('critical');
+        
+        muteCheckbox.onchange = (e) => { isMuted = e.target.checked; muteFab.textContent = isMuted ? "🔇" : "🔊"; localStorage.setItem('latent_muted', isMuted); };
+        typingSoundCheckbox.onchange = (e) => { typingSoundEnabled = e.target.checked; localStorage.setItem('latent_typing_sound', typingSoundEnabled); };
+        darkModeCheckbox.onchange = (e) => {
+            if (e.target.checked) document.body.classList.add('light');
+            else document.body.classList.remove('light');
+            localStorage.setItem('latent_dark_mode', e.target.checked);
+        };
+        
+        muteFab.onclick = () => { isMuted = !isMuted; muteCheckbox.checked = isMuted; muteFab.textContent = isMuted ? "🔇" : "🔊"; localStorage.setItem('latent_muted', isMuted); showToast(isMuted ? "🔇 Muted" : "🔊 Unmuted"); };
+        exportChatsBtn.onclick = exportChats;
+        importChatsBtn.onclick = () => importFileInput.click();
+        clearAllChatsBtn.onclick = clearAllChats;
+        importFileInput.onchange = (e) => { if (e.target.files[0]) importChats(e.target.files[0]); importFileInput.value = ''; };
+        
+        if (localStorage.getItem('latent_muted') === 'true') { isMuted = true; muteCheckbox.checked = true; muteFab.textContent = "🔇"; }
+        if (localStorage.getItem('latent_typing_sound') === 'false') { typingSoundEnabled = false; typingSoundCheckbox.checked = false; }
+        if (localStorage.getItem('latent_dark_mode') === 'true') { darkModeCheckbox.checked = true; document.body.classList.add('light'); }
+        
+        // ========== FIXED WEB SEARCH ==========
+                async function webSearch(query) {
+            showToast("🌐 Searching web...");
+            
+            // OPTION 1: Wikipedia (Best for India, no CORS issues)
+            try {
+                const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+                const res = await fetch(wikiUrl);
+                const data = await res.json();
+                
+                if (data.extract) {
+                    return `🔍 *Web Search: "${query}"* (via Wikipedia)
+
+📖 ${data.extract.substring(0, 800)}
+
+🔗 Source: ${data.content_urls?.desktop?.page || 'Wikipedia'}
+
+🇮🇳 *Latent AI - India Ka Apna AI*`;
+                }
+            } catch(e) {
+                console.log("Wikipedia error:", e);
+            }
+            
+            // OPTION 2: DuckDuckGo via CORS Proxy
+            try {
+                const ddgUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1`;
+                const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(ddgUrl)}`;
+                const res = await fetch(proxy);
+                const raw = await res.json();
+                const data = JSON.parse(raw.contents);
+                
+                if (data.AbstractText) {
+                    return `🔍 *Web Search: "${query}"*
+
+📖 ${data.AbstractText.substring(0, 600)}
+
+🔗 Source: ${data.AbstractURL || 'DuckDuckGo'}
+
+💡 Tip: Critical Thinking mode me aur detail me bataunga!`;
+                }
+                
+                // AbstractText empty ho toh RelatedTopics parse karo
+                const topics = (data.RelatedTopics || [])
+                    .filter(t => t.Text)
+                    .slice(0, 4);
+                if (topics.length) {
+                    const lines = topics.map(t => `• ${t.Text.substring(0, 150)}`).join('\n\n');
+                    return `🔍 *Web Search: "${query}"*
+
+📌 *Related Results:*
+
+${lines}
+
+🔗 Source: DuckDuckGo`;
+                }
+            } catch(e) {
+                console.log("DuckDuckGo error:", e);
+            }
+            
+            // OPTION 3: No results
+            return `🔍 *Web Search: "${query}"*
+
+❌ Koi result nahi mila.
+
+💡 Try karo:
+• Critical Thinking mode me pucho
+• Normal mode me pucho
+• Spelling check karo
+• "weather Delhi" ya "maps Mumbai" try karo`;
+        }
+        
+        async function getLiveWeather(city) {
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${WEATHER_API_KEY}&units=metric`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.cod !== 200) return { error: true, message: `City "${city}" not found` };
+                return {
+                    city: data.name, country: data.sys.country, temperature: data.main.temp,
+                    feelsLike: data.main.feels_like, humidity: data.main.humidity,
+                    windSpeed: (data.wind.speed * 3.6).toFixed(1),
+                    condition: data.weather[0].description,
+                    error: false
+                };
+            } catch { return { error: true, message: "Network error" }; }
+        }
+        
+        function getWeatherIcon(condition) {
+            const c = condition.toLowerCase();
+            if (c.includes('rain')) return "🌧️";
+            if (c.includes('cloud')) return "☁️";
+            if (c.includes('clear')) return "☀️";
+            return "🌤️";
+        }
+        
+        function formatWeatherDisplay(w) {
+            if (w.error) return `🌍 ${w.message}`;
+            const temp = Math.round(w.temperature);
+            const feelsLike = Math.round(w.feelsLike);
+            const icon = getWeatherIcon(w.condition);
+            
+            let suggestion = "";
+            if (temp > 35) suggestion = "🥵 Very hot! Stay hydrated! 💧";
+            else if (temp > 30) suggestion = "💦 It's hot, stay hydrated! 🌞";
+            else if (temp > 25) suggestion = "🌞 Nice weather, you can go out! 🌿";
+            else if (temp > 18) suggestion = "🍃 Pleasant weather, enjoy! 😊";
+            else if (temp > 10) suggestion = "🧥 A bit cold, take a jacket!";
+            else suggestion = "🥶 Very cold, wear warm clothes! ☕";
+            
+            if (w.humidity > 80) suggestion += " 💧 High humidity, keep drinking water!";
+            else if (w.humidity > 65) suggestion += " 💧 Slightly humid, stay hydrated!";
+            
+            return `${icon} *${w.city}, ${w.country}*
+
+🌡️ *Temperature:* ${temp}°C (Feels like ${feelsLike}°C)
+💧 *Humidity:* ${w.humidity}%
+💨 *Wind:* ${w.windSpeed} km/h
+☁️ *Condition:* ${w.condition}
+
+💡 ${suggestion}`;
+        }
+        
+        // ========== FIXED MAPS WITH PLACE NAME ==========
+        async function getGoogleMapsLink(city) {
+            try {
+                const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    const lat = data[0].lat;
+                    const lon = data[0].lon;
+                    const displayName = data[0].display_name.split(',')[0];
+                    const fullAddress = data[0].display_name;
+                    return `🗺️ *📍 ${displayName}*
+
+🏙️ *Place:* ${city}
+📌 *Address:* ${fullAddress.substring(0, 100)}...
+📍 *Coordinates:* ${lat}, ${lon}
+
+<a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" class="google-maps-link">🗺️ Click to open Google Maps</a>`;
+                }
+                return `❌ City "${city}" not found. Try "maps Mumbai" or "maps Delhi"`;
+            } catch {
+                return `❌ Unable to fetch map for "${city}"`;
+            }
+        }
+        
+        function isWeatherQuery(msg) {
+            const m = msg.toLowerCase();
+            return m.includes('weather') || m.includes('mausam') || m.includes('temperature') || m.includes('वेदर') || m.includes('मौसम') || m.includes('तापमान');
+        }
+        
+        function isMapQuery(msg) {
+            const m = msg.toLowerCase();
+            return m.includes('maps') || m.includes('map');
+        }
+        
+        function extractCityFromQuery(msg, type) {
+            let city = msg.toLowerCase().replace(new RegExp(`${type}`, 'gi'), '').replace(/वेदर|मौसम|तापमान|में|का|की|के|बता/g, '').trim();
+            const filler = ['in', 'of', 'for', 'ka', 'ki', 'ke', 'hai', 'bata', 'show', 'tell', 'plz', 'please', 'mein'];
+            filler.forEach(w => city = city?.replace(new RegExp(`\\b${w}\\b`, 'gi'), '').trim());
+            // Hindi city name to English mapping
+            const hindiCities = { 'दिल्ली': 'Delhi', 'मुंबई': 'Mumbai', 'अहमदाबाद': 'Ahmedabad', 'जयपुर': 'Jaipur', 'कोलकाता': 'Kolkata', 'चेन्नई': 'Chennai', 'बेंगलुरु': 'Bangalore', 'हैदराबाद': 'Hyderabad', 'पुणे': 'Pune', 'सूरत': 'Surat', 'लखनऊ': 'Lucknow', 'नागपुर': 'Nagpur', 'इंदौर': 'Indore', 'भोपाल': 'Bhopal', 'पटना': 'Patna', 'वडोदरा': 'Vadodara', 'लुधियाना': 'Ludhiana', 'आगरा': 'Agra', 'नासिक': 'Nashik', 'विशाखापत्तनम': 'Visakhapatnam', 'वाराणसी': 'Varanasi', 'गांधीनगर': 'Gandhinagar', 'चंडीगढ़': 'Chandigarh', 'रायपुर': 'Raipur', 'कोच्चि': 'Kochi', 'गुवाहाटी': 'Guwahati', 'भुवनेश्वर': 'Bhubaneswar', 'देहरादून': 'Dehradun', 'श्रीनगर': 'Srinagar', 'जोधपुर': 'Jodhpur', 'मदुरै': 'Madurai', 'अमृतसर': 'Amritsar', 'जबलपुर': 'Jabalpur', 'मेरठ': 'Meerut', 'राजकोट': 'Rajkot', 'कानपुर': 'Kanpur' };
+            if (hindiCities[city.trim()]) return hindiCities[city.trim()];
+            if (city && city.length) return city.split(' ').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+            return null;
+        }
+        
+        const thinkingMessages = {
+            normal: ["🤔 Processing...", "⏳ Just a sec...", "💭 Thinking..."],
+            critical: ["🧠 Deep analysis in progress...", "🔍 Examining multiple perspectives...", "⚡ Critical thinking engaged..."]
+        };
+        
+        function getThinkingMessage() {
+            const msgs = thinkingMessages[currentMode] || thinkingMessages.normal;
+            return msgs[Math.floor(Math.random() * msgs.length)];
+        }
+                async function handleUserMessage(message) {
+            const msg = message.toLowerCase();
+            
+            // MAPS QUERY
+            if (isMapQuery(message)) {
+                let city = extractCityFromQuery(message, 'maps');
+                if (!city) return "🗺️ Kaunsi city? Example: `maps Mumbai`, `maps Delhi`";
+                return await getGoogleMapsLink(city);
+            }
+            
+            // WEATHER QUERY
+            if (isWeatherQuery(message)) {
+                let city = extractCityFromQuery(message, 'weather');
+                if (!city) return "🌍 Kaunsi city? Example: `weather Delhi`, `weather Mumbai`";
+                city = getNearestCity(city);
+                const weather = await getLiveWeather(city);
+                if (weather.error) return `🌍 ${weather.message}`;
+                return formatWeatherDisplay(weather);
+            }
+            
+            // LOCATION
+            if (msg.includes('location') || msg.includes('where am i')) {
+                return `<strong>📍 Your Location</strong><br>
+🌆 ${userLocation.city}, ${userLocation.country}<br>
+📍 Coordinates: ${userLocation.lat}, ${userLocation.lon}<br>
+<a href="https://www.google.com/maps?q=${userLocation.lat},${userLocation.lon}" target="_blank" class="google-maps-link">📍 Google Maps mein dekho</a>`;
+            }
+            
+            // HELP
+            if (msg.includes('help')) {
+                return `📌 *Commands*: weather Delhi, maps Mumbai, location, time, date, joke, mood off`;
+            }
+            
+            if (msg.includes('time')) return `🕐 ${new Date().toLocaleTimeString()}`;
+            if (msg.includes('date')) return `📅 ${new Date().toLocaleDateString()}`;
+            if (msg.includes('joke')) return "😂 Python ne snake se kya kaha? Tu snake, main python!";
+            if (msg.includes('mood off') || msg.includes('sad')) return "💚 Main samajh sakta hoon. Thoda break le lo!";
+            
+            let systemPrompt = currentMode === 'critical' ? 
+                `You are a critical thinker. Analyze deeply. Respond in Hinglish.` : 
+                `You are a helpful assistant. Respond in Hinglish.`;
+            
+            try {
+                // Build conversation history — exclude last message (current one already saved)
+                const historyMessages = messages.slice(-11, -1).map(m => ({
+                    role: m.isUser ? 'user' : 'assistant',
+                    content: m.text
+                }));
+                historyMessages.push({ role: 'user', content: message });
+                const res = await fetch('https://fancy-grass-acd0.vataliyavatsal.workers.dev', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${DEEPSEEK_API_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'deepseek/deepseek-chat',
+                        messages: [{ role: 'system', content: systemPrompt }, ...historyMessages],
+                        temperature: currentMode === 'critical' ? 0.8 : 0.7,
+                        max_tokens: 1500
+                    })
+                });
+                const data = await res.json();
+                let reply = data.choices?.[0]?.message?.content || "Error!";
+                if (currentMode === 'critical') reply = "🧠 " + reply;
+                return reply;
+            } catch (error) {
+                return "❌ Network error! Try again.";
+            }
+        }
+        
+        async function getExactLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) { resolve(fallbackIPLocation()); return; }
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
+                        const data = await res.json();
+                        const city = data.address?.city || data.address?.town || "Delhi";
+                        const country = data.address?.country || "India";
+                        document.getElementById('locationDisplay').innerHTML = `📍 ${city}, ${country} (click for map)`;
+                        resolve({ city, country, lat: pos.coords.latitude, lon: pos.coords.longitude });
+                    } catch { resolve(fallbackIPLocation()); }
+                }, () => resolve(fallbackIPLocation()));
+            });
+        }
+        
+        async function fallbackIPLocation() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                document.getElementById('locationDisplay').innerHTML = `📍 ${data.city || 'Delhi'}, ${data.country_name || 'India'} (click for map)`;
+                return { city: data.city || 'Delhi', country: data.country_name || 'India', lat: data.latitude || 28.61, lon: data.longitude || 77.23 };
+            } catch {
+                document.getElementById('locationDisplay').innerHTML = `📍 दिल्ली, भारत (click for map)`;
+                return { city: "Delhi", country: "India", lat: 28.61, lon: 77.23 };
+            }
+        }
+        
+        async function updateLocation() { userLocation = await getExactLocation(); }
+        
+        function refreshSavedChats() {
+            if (!currentUser) { savedChatsList.innerHTML = '<div class="no-results">🔐 Login first</div>'; return; }
+            const saved = localStorage.getItem(`latent_chat_${currentUser.displayName}`);
+            if (!saved) { savedChatsList.innerHTML = '<div class="no-results">📭 No saved chats</div>'; return; }
+            const msgs = JSON.parse(saved);
+            if (!msgs.length) { savedChatsList.innerHTML = '<div class="no-results">📭 No messages</div>'; return; }
+            let html = '<div style="padding:10px;"><h3>📜 Saved Chats</h3>';
+            msgs.slice().reverse().forEach(m => {
+                html += `<div style="margin-bottom:15px;padding:10px;background:rgba(30,41,59,0.5);border-radius:16px;border-left:4px solid #8b5cf6;">
+                            <div style="color:#a78bfa;"><b>${m.isUser ? '👤 You' : '🇮🇳 Latent AI'}</b></div>
+                            <div style="font-size:13px; color:#e2e8f0;">${escapeHtml(m.text)}</div>
+                            <div style="font-size:10px;color:#94a3b8;">${new Date(m.time).toLocaleString()}</div>
+                         </div>`;
+            });
+            html += '</div>';
+            savedChatsList.innerHTML = html;
+        }
+        
+        function showShortIntro() {
+            if (!hasSeenShortIntro && !messages.length) {
+                addMessageUI(`नमस्ते 👋 मैं *Latent AI* हूँ — भारत का अपना स्मार्ट AI। 🇮🇳
+
+✨ *Three Powerful Modes:*
+
+🔘 *Normal Mode* - Quick, helpful responses
+🔘 *Critical Thinking Mode* - Deep analysis, step-by-step reasoning
+🔘 *Web Search Mode* - Real-time information from the web
+
+💡 *Try these:*
+• \`weather Delhi\` - Live weather
+• \`maps Mumbai\` - Google Maps link
+• \`location\` - Your location
+• \`joke\` - Funny joke
+
+*Current Mode:* 🤖 Normal
+
+Click the mode buttons above to switch! 🚀`, false);
+                hasSeenShortIntro = true;
+            }
+        }
+        
+        function loadHistory() {
+            if (!currentUser) return;
+            const saved = localStorage.getItem(`latent_chat_${currentUser.displayName}`);
+            if (saved) {
+                try {
+                    messages = JSON.parse(saved);
+                    if (messages.length) nextMessageId = Math.max(...messages.map(m => m.id || 0), 0) + 1;
+                    renderMessages();
+                    hasSeenShortIntro = true;
+                } catch {
+                    messages = [];
+                    localStorage.removeItem(`latent_chat_${currentUser.displayName}`);
+                    showToast("⚠️ Chat history corrupt, reset ki!");
+                    showShortIntro();
+                }
+            } else showShortIntro();
+        }
+        
+        function showLoginUI() { googleLoginBtn.style.display = 'flex'; userLoggedIn.style.display = 'none'; }
+        function showUserUI(name) {
+            googleLoginBtn.style.display = 'none';
+            userLoggedIn.style.display = 'flex';
+            userNameDisplay.textContent = name;
+            currentUser = { displayName: name };
+            loadHistory();
+            showToast(`Welcome ${name}! 🇮🇳 Current mode: ${currentMode}`);
+        }
+        
+        googleLoginBtn.onclick = () => { const n = prompt("Enter your name:", "Vatsal"); if (n?.trim()) showUserUI(n.trim()); };
+        logoutBtn.onclick = () => {
+            currentUser = null;
+            messages = [];
+            nextMessageId = 1;
+            showLoginUI();
+            chatPanel.innerHTML = '';
+            hasSeenShortIntro = false;
+            showShortIntro();
+            showToast("Logged out!");
+        };
+        
+        speakBtn.onclick = () => {
+            const last = document.querySelector('.message.ai:last-child .bubble');
+            if (last) speakText(last.innerText);
+            else showToast("🔊 No message to speak");
+        };
+        
+        function performSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            searchQuery = query;
+            if (!query) { renderMessages(); return; }
+            const msgs = document.querySelectorAll('#chatPanel .message');
+            let found = false;
+            msgs.forEach(msg => {
+                const bubble = msg.querySelector('.bubble');
+                if (bubble && bubble.innerText.toLowerCase().includes(query)) {
+                    msg.style.display = 'flex';
+                    found = true;
+                    const original = bubble.innerText;
+                    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                    bubble.innerHTML = original.replace(regex, '<mark style="background:#a78bfa;color:white;border-radius:4px;padding:0 2px;">$1</mark>');
+                } else msg.style.display = 'none';
+            });
+            if (!found) showToast("🔍 No messages found");
+        }
+        
+        function clearSearch() { searchInput.value = ''; searchQuery = ''; renderMessages(); showToast("🔍 Search cleared"); }
+        
+        searchBtn.onclick = performSearch;
+        clearSearchBtn.onclick = clearSearch;
+        searchInput.onkeypress = e => { if (e.key === 'Enter') performSearch(); };
+        
+        async function sendMessage() {
+            const msg = inputBox.value.trim();
+            
+            // Empty check
+            if (!msg) return;
+            
+            // Already sending check
+            if (isLoading) {
+                showToast("⏳ Response aa raha hai, thoda ruko!");
+                return;
+            }
+            
+            // Offline check
+            if (!navigator.onLine) {
+                showToast("📡 No Internet Connection!");
+                addMessageUI("📡 *Aap offline ho!*\n\nInternet connect karo.", false);
+                return;
+            }
+            
+            // Length check
+            if (msg.length > 2000) {
+                showToast("❌ 2000 characters se kam likho!");
+                return;
+            }
+            
+            // Clear input
+            inputBox.value = '';
+            
+            // Show user message
+            addMessageUI(msg, true);
+            saveMsg(msg, true);
+            playSendSound();
+            
+            // Set loading state
+            isLoading = true;
+            sendBtn.disabled = true;
+            sendBtn.textContent = '⏳';
+            
+            // Show thinking indicator
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.className = 'message ai';
+            thinkingDiv.id = 'thinkingIndicator';
+            thinkingDiv.innerHTML = `<div class="avatar">🇮🇳</div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span style="margin-left:8px; font-size:12px; color:#a78bfa;">${getThinkingMessage()}</span></div>`;
+            chatPanel.appendChild(thinkingDiv);
+            thinkingDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            
+            playTypingSound();
+            
+            try {
+                const reply = await handleUserMessage(msg);
+                
+                // Remove thinking indicator
+                const thinking = document.getElementById('thinkingIndicator');
+                if (thinking) thinking.remove();
+                
+                if (reply && reply.trim()) {
+                    addMessageUI(reply, false);
+                    saveMsg(reply, false);
+                }
+            } catch (error) {
+                const thinking = document.getElementById('thinkingIndicator');
+                if (thinking) thinking.remove();
+                addMessageUI("❌ Kuch gadbad hui. Phir se try karo!", false);
+            } finally {
+                isLoading = false;
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send ✨';
+            }
+        }        
+        window.copyToClipboard = copyToClipboard;
+        
+        sendBtn.onclick = sendMessage;
+        inputBox.onkeydown = e => { 
+            if (e.key === 'Enter' && !e.shiftKey && !isLoading) { e.preventDefault(); sendMessage(); }
+        };
+        
+        showLoginUI();
+        showShortIntro();
+        updateLocation();
+
+        window.addEventListener('offline', () => showToast("📡 Internet chala gaya!", 3000));
+        window.addEventListener('online', () => showToast("✅ Internet wapas aa gaya!", 3000));
+        
+    </script>
+</body>
+</html>

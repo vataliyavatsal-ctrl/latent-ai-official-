@@ -6,16 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>LATENT AI</title>
     <meta name="description" content="LATENT AI - Local AI chat interface powered by Ollama" />
-    <meta name="theme-color" content="#171c2e" />
+    <meta name="theme-color" content="#0f1115" />
     <link rel="icon"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23a78bfa'/%3E%3Cpath d='M13 2 4 14h6l-1 8 9-12h-6l1-8z' fill='%230f1320'/%3E%3C/svg%3E" />
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%233b82f6'/%3E%3Cpath d='M13 2 4 14h6l-1 8 9-12h-6l1-8z' fill='%23ffffff'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
     <noscript>Is page ko chalane ke liye JavaScript on karo.</noscript>
-
-    <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
     <div class="shell" id="shell">
     <div class="sb-backdrop" id="sbBackdrop"></div>
@@ -51,53 +49,10 @@
                         </svg>
                         <span>New chat</span>
                     </button>
-
-                    <div class="location-badge" id="locationBadge" title="Your location">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z" />
-                            <circle cx="12" cy="10" r="3" />
-                        </svg>
-                        <span id="locationText">India</span>
-                    </div>
                 </div>
             </div>
 
             <div class="header-controls">
-                <!-- Language chips -->
-                <div class="chips" id="languageChips" role="group" aria-label="Language selector">
-                    <button class="chip active" data-lang="hi" type="button">
-                        <span class="lang-code">IN</span> हिंदी
-                    </button>
-                    <button class="chip" data-lang="en" type="button">
-                        <span class="lang-code">GB</span> English
-                    </button>
-
-                    <div class="chip chip-select-wrap">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M2 12h20" />
-                            <path
-                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                        </svg>
-                        <select class="chip-select" id="moreLanguages" aria-label="More Indian languages">
-                            <option value="">+12 Indian Languages</option>
-                            <option value="bn">বাংলা (Bengali)</option>
-                            <option value="ta">தமிழ் (Tamil)</option>
-                            <option value="te">తెలుగు (Telugu)</option>
-                            <option value="mr">मराठी (Marathi)</option>
-                            <option value="gu">ગુજરાતી (Gujarati)</option>
-                            <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                            <option value="ml">മലയാളം (Malayalam)</option>
-                            <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
-                            <option value="or">ଓଡ଼ିଆ (Odia)</option>
-                            <option value="as">অসমীয়া (Assamese)</option>
-                            <option value="ur">اردو (Urdu)</option>
-                            <option value="sa">संस्कृतम् (Sanskrit)</option>
-                        </select>
-                    </div>
-                </div>
 
                 <!-- Feature mode toggles -->
                 <div class="modes" id="modeToggles" role="group" aria-label="Feature modes">
@@ -116,14 +71,6 @@
                             <path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z" />
                         </svg>
                         <span>Critical Thinking</span>
-                    </button>
-                    <button class="mode-btn" data-mode="web" type="button">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <circle cx="11" cy="11" r="8" />
-                            <path d="m21 21-4.3-4.3" />
-                        </svg>
-                        <span>Web Search</span>
                     </button>
                 </div>
             </div>
@@ -210,9 +157,6 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="scene.js" defer></script>
     <script src="app.js" defer></script>
 </body>
 

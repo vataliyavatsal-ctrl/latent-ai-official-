@@ -10,7 +10,6 @@ const attachPreview = document.getElementById("attachPreview");
 const attachImg = document.getElementById("attachImg");
 const attachRemove = document.getElementById("attachRemove");
 
-const moreLanguages = document.getElementById("moreLanguages");
 const newChatBtn = document.getElementById("newChatBtn");
 
 const loginBtn = document.getElementById("loginBtn");
@@ -27,8 +26,8 @@ const MAX_HISTORY = 200;
 let isSending = false;
 let controller = null;
 let attachedImage = null; // data URL
-let currentLang = "hi";
 let currentMode = "normal";
+let chatTitle = null; // chat ka naam (rename ke baad bhi bacha rehta hai)
 let chatId = null; // saved chat ka id (pehle message ke baad banta hai)
 let session = 0; // chat badalne par badhta hai, purani stream ko rokne ke liye
 let history = []; // [{ role: "user" | "assistant", content: "..." }]
@@ -57,7 +56,10 @@ function addMessage(type, text, imageSrc) {
         img.alt = "Attached image";
         bubble.appendChild(img);
     }
-    if (text) bubble.appendChild(document.createTextNode(text));
+    if (text) {
+        if (type === "ai") setAi(bubble, text);
+        else bubble.appendChild(document.createTextNode(text));
+    }
 
     message.appendChild(bubble);
     chatContainer.appendChild(message);
@@ -77,6 +79,45 @@ function remember(userText, reply) {
     if (history.length > MAX_HISTORY) history = history.slice(-MAX_HISTORY);
     saveChat();
 }
+
+/* ---------- reply formatting (code block, bold, copy) ---------- */
+function esc(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function renderMarkdown(text) {
+    // ``` ke beech ka hissa code hai (stream ke dauran band na hua ho tab bhi)
+    const html = esc(text).split("```").map((part, i) => {
+        if (i % 2 === 1) {
+            const nl = part.indexOf("\n");
+            const code = nl >= 0 ? part.slice(nl + 1) : part; // pehli line language ka naam hoti hai
+            return '<pre><button class="copy-code" type="button">Copy</button><code>' + code.replace(/\n$/, "") + "</code></pre>";
+        }
+        return part
+            .replace(/`([^`\n]+)`/g, "<code>$1</code>")
+            .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>");
+    }).join("");
+    return html + '<button class="copy-reply" type="button">Copy reply</button>';
+}
+
+function setAi(bubble, text) {
+    bubble.dataset.raw = text;
+    bubble.innerHTML = renderMarkdown(text);
+}
+
+chatContainer.addEventListener("click", (e) => {
+    const btn = e.target.closest(".copy-code, .copy-reply");
+    if (!btn) return;
+    const text = btn.classList.contains("copy-code")
+        ? btn.parentElement.querySelector("code").textContent
+        : btn.closest(".bubble").dataset.raw;
+    navigator.clipboard.writeText(text || "").then(() => {
+        const old = btn.textContent;
+        btn.textContent = "Copied!";
+        setTimeout(() => (btn.textContent = old), 1200);
+    }).catch(() => { });
+});
+/* end formatting */
 
 /* ---------- send (streaming) ---------- */
 async function sendMessage() {
@@ -98,7 +139,6 @@ async function sendMessage() {
     const payload = {
         message: text,
         history: history.slice(),
-        language: currentLang,
         mode: currentMode,
     };
     if (image) payload.images = [image.split(",")[1]]; // base64 only
@@ -136,20 +176,20 @@ async function sendMessage() {
                 aiMsg.className = "message ai";
                 started = true;
             }
-            bubble.textContent = reply;
+            setAi(bubble, reply);
             followStream();
         }
         reply += decoder.decode();
 
         aiMsg.className = "message ai";
-        bubble.textContent = reply || "Empty response received.";
+        setAi(bubble, reply || "Empty response received.");
         if (reply.trim()) if (mySession === session) remember(text, reply);
     } catch (err) {
         if (err.name === "AbortError") {
             // user pressed Stop (or started a new chat)
             aiMsg.className = "message ai";
             if (reply.trim()) {
-                bubble.textContent = reply;
+                setAi(bubble, reply);
                 if (mySession === session) remember(text, reply);
             } else {
                 bubble.textContent = "Reply roka gaya.";
@@ -202,22 +242,8 @@ function setupToggle(selector, onChange) {
     });
 }
 
-setupToggle("#languageChips .chip[data-lang]", (btn) => {
-    currentLang = btn.dataset.lang;
-    moreLanguages.value = "";
-});
-
 setupToggle("#modeToggles .mode-btn", (btn) => {
     currentMode = btn.dataset.mode;
-});
-
-moreLanguages.addEventListener("change", () => {
-    if (moreLanguages.value) {
-        currentLang = moreLanguages.value;
-        document
-            .querySelectorAll("#languageChips .chip[data-lang]")
-            .forEach((b) => b.classList.remove("active"));
-    }
 });
 
 /* ---------- image attach ---------- */
@@ -259,11 +285,7 @@ attachRemove.addEventListener("click", clearAttachment);
 
 /* ---------- voice input ---------- */
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const speechLangMap = {
-    hi: "hi-IN", en: "en-GB", bn: "bn-IN", ta: "ta-IN", te: "te-IN", mr: "mr-IN",
-    gu: "gu-IN", kn: "kn-IN", ml: "ml-IN", pa: "pa-IN", or: "or-IN", as: "as-IN",
-    ur: "ur-IN", sa: "hi-IN",
-};
+const VOICE_LANG = "en-IN"; // mic ki bhasha. Hindi bolni ho to "hi-IN" kar do
 
 let recognition = null;
 let listening = false;
@@ -313,7 +335,7 @@ micBtn.addEventListener("click", () => {
         recognition.stop();
         return;
     }
-    recognition.lang = speechLangMap[currentLang] || "hi-IN";
+    recognition.lang = VOICE_LANG;
     recognition.start();
 });
 
@@ -411,10 +433,11 @@ function saveChat() {
     if (!history.length) return;
     if (!chatId) chatId = newId();
     const first = history.find((m) => m.role === "user");
-    const title = (first ? first.content : "New chat").replace(/\s+/g, " ").slice(0, 40);
+    if (!chatTitle) chatTitle = (first ? first.content : "New chat").replace(/\s+/g, " ").slice(0, 40);
+    const title = chatTitle;
     api("/api/chats/" + chatId, {
         method: "PUT",
-        body: JSON.stringify({ title, messages: history, language: currentLang }),
+        body: JSON.stringify({ title, messages: history }),
     }).then(refreshList).catch(() => { });
 }
 
@@ -471,6 +494,11 @@ function renderList(items) {
         del.textContent = "\u00d7";
         del.setAttribute("aria-label", "Delete chat");
         row.append(title, del);
+        title.title = "Double-click karke rename karo";
+        title.addEventListener("dblclick", (e) => {
+            e.stopPropagation();
+            renameChat(c.id, c.title);
+        });
         row.addEventListener("click", () => openChat(c.id));
         del.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -485,6 +513,7 @@ function resetView() {
     if (controller) controller.abort();
     history = [];
     chatId = null;
+    chatTitle = null;
     while (chatContainer.children.length > 1) {
         chatContainer.lastElementChild.remove();
     }
@@ -507,6 +536,7 @@ async function openChat(id) {
         const chat = await res.json();
         resetView();
         chatId = chat.id;
+        chatTitle = chat.title;
         history = chat.messages;
         history.forEach((m) => addMessage(m.role === "user" ? "user" : "ai", m.content));
         scrollToBottom();
@@ -515,6 +545,17 @@ async function openChat(id) {
     } catch (e) {
         addMessage("error", "Chat load nahi ho payi.");
     }
+}
+
+async function renameChat(id, old) {
+    const name = prompt("Chat ka naya naam:", old);
+    if (!name || !name.trim()) return;
+    const t = name.trim().slice(0, 80);
+    try {
+        await api("/api/chats/" + id, { method: "PATCH", body: JSON.stringify({ title: t }) });
+    } catch (e) { }
+    if (id === chatId) chatTitle = t;
+    refreshList();
 }
 
 async function deleteChat(id) {
